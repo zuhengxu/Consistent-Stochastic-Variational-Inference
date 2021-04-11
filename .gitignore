@@ -1,3 +1,12 @@
+## python tmp files
+np
+pd
+sys
+argparse
+glob
+
+
+
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof
