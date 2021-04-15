@@ -1,5 +1,9 @@
 #!/bin/bash
 
+###########
+##VI under different initialization settings
+###########
+
 for alg in 'CSVI' 'CSVI_RSD' 'SVI' 'SVI_Ind' 'SVI_OPT' 'SVI_SMAP'
 do
     python3 main.py --alg $alg  get_init &
@@ -22,10 +26,13 @@ done
 wait
 echo -e 'VI inference done'
 
+###########
+## sensitivity analysis to smoothing constant
+###########
 
 for alg in 'CSVI' 'CSVI_RSD'
 do 
-    for alpha in 10 20 50 100 200 500 
+    for alpha in 10 20 50 100 200 2000 10000 100000 
     do
         python3 main.py --alg $alg --alpha $alpha --init_folder "results/sensitivity/" --init_title "alpha_" get_init &
     done
@@ -46,6 +53,10 @@ wait
 echo -e 'alpha sensitivity done'
 
 
+
+###########
+## sensitivity analysis to learning rate (SVI/CSVI under all settings) 
+###########
 for alg in 'CSVI' 'CSVI_RSD' 'SVI' 'SVI_Ind' 'SVI_OPT' 'SVI_SMAP'
 do
     for step in 5 10 15 20 25 30 

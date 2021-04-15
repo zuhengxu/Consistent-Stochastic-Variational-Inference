@@ -1,8 +1,6 @@
 from autograd.scipy import stats
 import autograd.numpy as np 
 from scipy.stats import norm
-import os, sys
-sys.path.append("/home/zuheng/Research/Asymptotic_Optimization_Properties_for_VI/code")
 from VI.util import *
 
 

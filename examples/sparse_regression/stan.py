@@ -141,21 +141,3 @@ else:
 
 
 
-
-
-
-# #samples
-# samples  = az.from_pystan(fit)
-# samples.to_netcdf(result_path + 'samples.nc')
-
-# #plot
-# samples_read= az.from_netcdf(result_path + 'samples.nc')
-# az.summary(samples_read.posterior.beta).to_csv(result_path + 'beta_summary.csv')
-# az.rcParams["plot.max_subplots"] = 20
-# axe = az.plot_posterior(samples_read, var_names=('beta'), bw = 0.1)
-# fig = axe.ravel()[0].figure
-# fig.savefig(fig_path + "beta.png")
-
-
-
-

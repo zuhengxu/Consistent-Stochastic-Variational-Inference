@@ -1,15 +1,14 @@
-import os
-import sys
+import autograd.numpy as np
+import argparse
+import os, sys
 sys.path.insert(1, os.path.join(sys.path[0], '../..'))
+sys.path.insert(1, os.path.join(sys.path[0], '..'))
 from examples.common.results import *
 from examples.common.elbo import *
 from examples.common.synthetic_model import *
 from VI.csvi import *
 from VI.svi import *
 from VI.MAP import *
-import autograd.numpy as np
-import argparse
-
 
 
 ###########################
@@ -19,6 +18,8 @@ import argparse
 ###########################
 
 def get_init(arguments):
+    if not os.path.exists("results/"):
+        os.mkdir('results/')
     # check if intials already exists
     if check_exists(arguments.init_title + arguments.alg, arguments.init_folder):
         print('Initialization already exists for' + arguments.alg)
@@ -86,6 +87,8 @@ def get_init(arguments):
 #######################################################
 
 def run_vi(arguments):
+    if not os.path.exists("results/"):
+        os.mkdir('results/')
     # check if results already exists
     if check_exists(arguments.vi_title + arguments.alg, arguments.vi_folder):
         print('VI results already exists for' + arguments.alg)

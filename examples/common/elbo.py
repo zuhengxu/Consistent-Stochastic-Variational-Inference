@@ -1,7 +1,6 @@
-import autograd.numpy as np 
+import autograd.numpy as np
 
-## gaussian entropy and ELBO 1d
-
+## ELBO 1d
 def GVB_ELBO(unorm_lpdf, mu, sd, num_samples = 1000):
     samples = np.random.randn(num_samples)*sd + mu
     gs_entropy = np.log(sd) + np.log(2*np.pi)/2 + 0.5

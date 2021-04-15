@@ -1,7 +1,8 @@
 import autograd.numpy as np
 import argparse
 import os, sys
-sys.path.insert(3, os.path.join(sys.path[0], '../..'))
+sys.path.insert(1, os.path.join(sys.path[0], '../..'))
+sys.path.insert(1, os.path.join(sys.path[0], '..'))
 from VI.MAP import *
 from VI.svi import *
 from VI.csvi import *

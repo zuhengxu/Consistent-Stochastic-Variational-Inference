@@ -1,15 +1,9 @@
 from examples.common.elbo import *
-from VI.util import *
-from autograd.scipy import stats
 import autograd.numpy as np
 from autograd import grad
 from autograd.misc import flatten
-import os
-import sys
+from .util import *
 
-from numpy.lib.function_base import digitize
-sys.path.append(
-    "/home/zuheng/Research/Asymptotic_Optimization_Properties_for_VI/code")
 
 
 # csvi
@@ -36,6 +30,7 @@ def csvi(x0, N, log_post_pdf, learning_rate, num_iters):
         mu = mu - learning_rate(i) * mu_grad
         L = L - learning_rate(i) * L_grad
         L = map_neg_diag(L, learning_rate(i))  # projection step
+
         # map nan value to init
         x, _ = flatten([mu, L])
         if np.isnan(np.sum(x)):
@@ -47,6 +42,7 @@ def csvi(x0, N, log_post_pdf, learning_rate, num_iters):
     return x
 
 
+# csvi using adam update
 def csvi_adam(x0, N, log_post_pdf, learning_rate, num_iters):
 
     dim, mu, L = de_flatten(x0)
@@ -69,10 +65,10 @@ def csvi_adam(x0, N, log_post_pdf, learning_rate, num_iters):
         L_grad = - np.diag(1/np.diag(L))/N + np.tril(np.outer(mu_grad, Z))
         L_grad[di] = (N*L[di] / (1 + N*L[di])) * L_grad[di]
         # updates
-        m_mu, v_mu, mu = adam_update(
-            i, mu, mu_grad, m_mu, v_mu, learning_rate(i))
+        m_mu, v_mu, mu = adam_update( i, mu, mu_grad, m_mu, v_mu, learning_rate(i))
         m_L, v_L, L = adam_update(i, L, L_grad, m_L, v_L, learning_rate(i))
         L = map_neg_diag(L, learning_rate(i))  # projection step
+
         # map nan value to init
         x, _ = flatten([mu, L])
         if np.isnan(x).any():

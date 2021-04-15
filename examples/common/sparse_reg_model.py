@@ -1,8 +1,7 @@
 import autograd.numpy as np
-import os, sys
-sys.path.append(
-    "/home/zuheng/Research/Asymptotic_Optimization_Properties_for_VI/code")
 from VI.util import *
+
+
 
 
 def log_likelihood(param, data, sigma):
@@ -39,7 +38,7 @@ def prior_sample(Sample_size, D, tau1, tau2):
 
 
 def syn_lpdf(param):
-    syn_dat = np.load( '/home/zuheng/Research/Asymptotic_Optimization_Properties_for_VI/code/examples/data/syndat_sparse_reg.npy')
+    syn_dat = np.load( '../data/syndat_sparse_reg.npy')
     return log_posterior(param, syn_dat, 5, .1, 10)
 
 def syn_pdf(param):
@@ -48,7 +47,7 @@ def syn_pdf(param):
 
 
 def real_lpdf(param):
-    dat = np.load( '/home/zuheng/Research/Asymptotic_Optimization_Properties_for_VI/code/examples/data/prostate.npy')
+    dat = np.load( '../data/prostate.npy')
     return log_posterior(param, dat, 1, .01, 5)
 
 def real_pdf(param):
@@ -56,21 +55,6 @@ def real_pdf(param):
     return np.expm1(lpdf) + 1
 
 
-
-
-
-# #####################################
-# ### Synthetic data generation
-# #####################################
-# D = 5 # number of features
-# N = 10 # number of obs
-# X = np.random.randn(N, D) # covariates
-# #generate true coef
-# beta_true = np.hstack((np.random.randn(1)+5, np.zeros(D -1)))
-# Y = np.random.randn(N)*0.5 + np.dot(X, beta_true)
-# dat_sparse_reg = np.hstack((Y[:, None], X))
-# data_path = '/home/zuheng/Research/Asymptotic_Optimization_Properties_for_VI/code/examples/data/syndat_sparse_reg.npy'
-# np.save(data_path, dat_sparse_reg)
 
 
 

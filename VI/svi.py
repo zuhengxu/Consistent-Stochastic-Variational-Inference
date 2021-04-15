@@ -1,20 +1,14 @@
 from autograd.scipy import stats
-import autograd.numpy as np 
+import autograd.numpy as np
 from scipy.stats import norm
 from autograd import grad
 from autograd.misc import flatten
 from .util import *
-import sys
-sys.path.append("/home/zuheng/Research/Asymptotic_Optimization_Properties_for_VI/code")
-from examples.common.elbo import *
 
 
-
-# svi
-# simple projected sgd
-
+# svi: simple projected sgd
 def svi(x0, N, log_post_pdf, learning_rate, num_iters):
-    
+
     dim, mu, L = de_flatten(x0)
     #make sure initial L invertible, map non-pos diag idx to 1
     L = map_neg_diag(L,1.)
@@ -22,13 +16,13 @@ def svi(x0, N, log_post_pdf, learning_rate, num_iters):
     f = lambda x: log_post_pdf(x)/N
     gobj = grad(f)
     x= np.atleast_1d(x0)
-    
+
     for i in range(num_iters):
         Z = np.random.randn(dim)
         zz = mu + np.dot(L, Z[:,np.newaxis]).T[0]
         #grad for mu and L
         mu_grad = - gobj(zz)
-        L_grad  = - np.diag(1/np.diag(L))/N + np.tril(np.outer(mu_grad, Z))       
+        L_grad  = - np.diag(1/np.diag(L))/N + np.tril(np.outer(mu_grad, Z))
         #updates
         mu = mu - learning_rate(i)* mu_grad
         L = L - learning_rate(i)* L_grad
@@ -44,7 +38,7 @@ def svi(x0, N, log_post_pdf, learning_rate, num_iters):
     return x
 
 
-
+# svi with adam update
 def svi_adam(x0, N, log_post_pdf, learning_rate, num_iters):
     dim, mu, L = de_flatten(x0)
     #make sure initial L invertible, map non-pos diag idx to 1
@@ -61,7 +55,7 @@ def svi_adam(x0, N, log_post_pdf, learning_rate, num_iters):
         zz = mu + np.dot(L, Z[:,np.newaxis]).T[0]
         #grad for mu and L
         mu_grad = - gobj(zz)
-        L_grad  = - np.diag(1/np.diag(L))/N + np.tril(np.outer(mu_grad, Z)) 
+        L_grad  = - np.diag(1/np.diag(L))/N + np.tril(np.outer(mu_grad, Z))
         # adam updates: m,v,x
         m_mu, v_mu, mu = adam_update(i, mu, mu_grad, m_mu, v_mu, learning_rate(i))
         m_L, v_L, L = adam_update(i, L, L_grad, m_L, v_L, learning_rate(i))
@@ -78,7 +72,7 @@ def svi_adam(x0, N, log_post_pdf, learning_rate, num_iters):
 
 
 
-            
+
 
 
 
