@@ -1,8 +1,10 @@
 # Consistent-Stochastic-Variational-Inference
 
-This repository provides source code for the experiments in our paper Z.Xu and T.Campbell, "[The
-computatioal asymptotics of Gaussian variational
-inference](https://arxiv.org/abs/2104.05886)". Examples run and generate output
+This repository provides source code for the experiments in 
+
+Z.Xu and T.Campbell, [The computatioal asymptotics of Gaussian variational inference](https://arxiv.org/abs/2104.05886). 
+
+Examples run and generate output
 using Python3.
 - `VI/` provides functions for inferences (CSVI/SVI and smoothed MAP) 
 - `examples/` provides code to replicate examples and figures
@@ -11,7 +13,7 @@ using Python3.
 
 
 
-## How to run the code?
+## How to run the code
 All experiments should be run in its own folder (`examples/synthetic_mixutre/` `examples/sparse_regression/` and `examples/Gaussian_mixture/`): 
 - In each `examples/*` folder, run `./run.sh` to perform the experiment
 - In each `examples/*` folder, run `python3 plot.py` to generate plots
