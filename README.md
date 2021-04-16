@@ -5,7 +5,7 @@ computatioal asymptotics of Gaussian variational
 inference](https://arxiv.org/abs/2104.05886)". Examples run and generate output
 using Python3.
 - `VI/` provides functions for inferences (CSVI/SVI and smoothed MAP) 
-- `examples/` provides code to replicate examples and figures for [the paper](https://arxiv.org/abs/2104.05886)
+- `examples/` provides code to replicate examples and figures
 - Datasets(both raw and processed) used in experiments are provided in `examples/data/`, including code that generates the synthetic datasets and processes real datasets
 
 
