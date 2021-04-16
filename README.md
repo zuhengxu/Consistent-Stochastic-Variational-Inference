@@ -16,6 +16,6 @@ All experiments should be run in its own folder (`examples/synthetic_mixutre/` `
 - In each `examples/*` folder, run `./run.sh` to perform the experiment
 - In each `examples/*` folder, run `python3 plot.py` to generate plots
 
-**Note:** In `examples/sparse_regression/`, run `python3 stan.py` before `python3 plot.py`---one of the plot uses Monte Carlo samples generated using [PyStan](https://pystan.readthedocs.io/en/latest/).  
+**Note:** In `examples/sparse_regression/`, run `python3 stan.py` before running `python3 plot.py`---one of the plot uses Monte Carlo samples generated using [PyStan](https://pystan.readthedocs.io/en/latest/).  
 
 
