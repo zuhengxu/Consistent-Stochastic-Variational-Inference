@@ -1,5 +1,8 @@
 #!/bin/bash
 
+##########
+## synthetic example
+##########
 for dataset in "SYN"
 do
     for mu in "Prior" "SMAP_adam"
@@ -31,6 +34,9 @@ wait
 echo -e 'VI done'
 
 
+##########
+## real-data example
+##########
 
 for mu in "SMAP_adam"
 do
@@ -55,7 +61,7 @@ echo -e 'REAL Initialization done'
 
 for dataset in "REAL"
 do  
-    for ID in 1 2 3 
+    for ID in 1 2 3 4 5 
     do 
         python3 main.py --dataset $dataset --mu_scheme "Prior" --L_scheme "Ind" --trial $ID run_vi --vi_alg "SVI_adam" --vi_stepsched 'lambda iter: 0.001'&
         python3 main.py --dataset $dataset --mu_scheme "Prior" --L_scheme "Random" --trial $ID run_vi --vi_alg "SVI_adam" --vi_stepsched 'lambda iter: 0.001'&

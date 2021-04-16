@@ -23,10 +23,10 @@ def get_init(arguments):
     if not os.path.exists("results/"):
         os.mkdir('results/')
     # check if intials already exists
-    if check_exists(arguments.dataset+ "_" + arguments.mu_scheme + arguments.L_scheme, arguments.init_folder):
-        print('Initialization already exists for' + arguments.dataset+ "_" + arguments.mu_scheme + arguments.L_scheme)
-        print('Quitting')
-        quit()
+    # if check_exists(arguments.dataset+ "_" + arguments.mu_scheme + arguments.L_scheme, arguments.init_folder):
+        # print('Initialization already exists for' + arguments.dataset+ "_" + arguments.mu_scheme + arguments.L_scheme)
+        # print('Quitting')
+        # quit()
 
     ###################
     ## Step 0: Setup

@@ -1,14 +1,20 @@
 #!/bin/bash
 
+##############
+## synthetic example
+##############
 for dataset in "SYN" 
 do
-    for mu in "Prior" "SMAP_adam"
-    do
-        for L in  "Ind" "Random"
-        do
-            python3 main.py --dataset $dataset --mu_scheme $mu --L_scheme $L get_init &
-        done
-    done
+	for ID in 1 2 3 4 5
+	do
+		for mu in "Prior" "SMAP_adam"
+		do
+			for L in  "Ind" "Random"
+			do
+				python3 main.py --dataset $dataset --mu_scheme $mu --L_scheme $L get_init &
+			done
+		done
+	done
 done
 
 wait 
@@ -31,6 +37,9 @@ echo -e 'SYN VI done'
 
 
 
+##############
+## real-data example
+##############
 for dataset in "REAL" 
 do
     for mu in  "SMAP_adam"
