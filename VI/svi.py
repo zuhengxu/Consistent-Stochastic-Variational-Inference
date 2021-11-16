@@ -1,3 +1,4 @@
+from examples.common.elbo import *
 from autograd.scipy import stats
 import autograd.numpy as np
 from scipy.stats import norm

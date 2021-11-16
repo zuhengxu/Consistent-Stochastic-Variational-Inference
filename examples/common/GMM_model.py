@@ -68,7 +68,7 @@ def syn_lpdf(param):
 
 
 def syn_pdf(param):
-    # add 1500 to avoid underflow, won't affect the resutls
+    # add 1500 to avoid underflow, won't affect the results
     lpdf = syn_lpdf(param) + 1500
     return np.exp(lpdf)
 

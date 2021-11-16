@@ -55,6 +55,10 @@ def map_neg_diag(L, a):
     L[di] = L_diag
     return L
 
+def sym_inv(H):
+    u, s, v = np.linalg.svd(H)
+    Hinv = np.dot(v.transpose(), np.dot(np.diag(s**-1), u.transpose()))
+    return Hinv 
 
 
 # update rule of adam
