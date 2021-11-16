@@ -4,7 +4,7 @@
 ##VI under different initialization settings
 ###########
 
-for alg in 'CSVI' 'CSVI_RSD' 'SVI' 'SVI_Ind' 'SVI_OPT' 'SVI_SMAP'
+for alg in 'CSVI' 'CSVI_RSD' 'SVI' 'SVI_Ind' 'SVI_OPT' 'SVI_SMAP' 
 do
     python3 main.py --alg $alg  get_init &
 done
@@ -13,7 +13,7 @@ wait
 echo -e 'initialization done'
 
 
-for alg in 'CSVI' 'CSVI_RSD' 
+for alg in 'CSVI' 'CSVI_RSD' 'CSL'
 do
     python3 main.py  --alg $alg run_vi --vi_stepsched 5 &
 done

@@ -111,21 +111,29 @@ def run_vi(arguments):
         'SVI': 'SVI',
         'SVI_Ind': 'SVI',
         'SVI_SMAP': 'SVI',
-        'SVI_OPT': 'SVI'
+        'SVI_OPT': 'SVI', 
+        'CSL': 'LAPLACE'
     }
 
     # choose the alg to run
-    alg_dict = {'SVI': svi, 'CSVI': csvi}
+    alg_dict = {'SVI': svi, 'CSVI': csvi, 'LAPLACE': cs_laplace_1d}
     vi_alg = alg_dict[alg_class[arguments.alg]]
 
     # set step schedule for vi optimization
-    def vi_lrt(i): return arguments.vi_stepsched/(1 + i)
+    if arguments.alg == 'CSL':
+        def vi_lrt(i): return 0.001
+    else:
+        def vi_lrt(i): return arguments.vi_stepsched/(1 + i)
 
     #######################################
     # Step 1: Read initialization results
     #######################################
-    df_init = pd.read_csv(os.path.join(
-            arguments.init_folder, arguments.init_title + arguments.alg + '.csv'))
+    if arguments.alg == 'CSL':
+        df_init = pd.read_csv(os.path.join(
+            arguments.init_folder, arguments.init_title + 'CSVI.csv'))
+    else:
+        df_init = pd.read_csv(os.path.join(
+                arguments.init_folder, arguments.init_title + arguments.alg + '.csv'))
 
     ##############################
     # Step 2: run vi alg
@@ -141,7 +149,11 @@ def run_vi(arguments):
         init_val, _ = flatten([mean_init, sd_init])
 
         # get vi results (mean, sd)
-        x = vi_alg(init_val, 1, lpdf, vi_lrt, 100000)
+        if arguments.alg == 'CSL':
+            x = vi_alg(init_val, lpdf, vi_lrt, 5000)
+        else:
+            x = vi_alg(init_val, 1, lpdf, vi_lrt, 100000)
+        
         mean_vi, sd_vi = np.array([x[0]]), np.array([x[1]])
         # compute elbo
         elbo = GVB_ELBO(lpdf, mean_vi, sd_vi, 1000)
