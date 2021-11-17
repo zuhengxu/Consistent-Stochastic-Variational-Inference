@@ -174,7 +174,13 @@ def run_vi(arguments):
     })
     df = df_init.join(df_results)
 
+    if arguments.alg == 'CSL':
+        df = df.replace('CSVI', 'CSL')
+
     save(df, arguments.vi_title + arguments.alg, arguments.vi_folder)
+
+
+
 
 
 ###########################

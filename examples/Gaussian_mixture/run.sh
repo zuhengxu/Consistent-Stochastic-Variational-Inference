@@ -30,6 +30,7 @@ do
     done
 done
 
+
 wait 
 echo -e 'VI done'
 
@@ -73,4 +74,13 @@ done
 wait
 echo -e 'REAL VI done'
 
-
+#######################
+### add laplace 
+########################
+for dataset in 'SYN' 'REAL'
+do 
+    for ID in 1 2 3 4 5 
+    do 
+    python3 main.py --dataset $dataset --mu_scheme "SMAP_adam" --L_scheme "Ind" --trial $ID run_vi --vi_alg "CSL" &
+    done 
+done 

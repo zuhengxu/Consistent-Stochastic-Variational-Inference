@@ -118,17 +118,14 @@ def run_vi(arguments):
     vi_alg = alg_dict[arguments.vi_alg]
     # set step schedule for vi optimization
     if arguments.vi_alg == 'CSL':
-        def vi_lrt(i): return 0.001
+        def vi_lrt(i): return 0.0001
     else:
         vi_lrt = eval(arguments.vi_stepsched)
 
     #######################################
     ## Step 1: Read initialization results
     #######################################
-    if arguments.vi_alg == 'CSL':
-        df_init = pd.read_csv(os.path.join(arguments.init_folder, arguments.dataset+ "_" + 'SMAP_adam' + 'Ind' + '.csv' ))
-    else:
-        df_init = pd.read_csv(os.path.join(arguments.init_folder, arguments.dataset+ "_" + arguments.mu_scheme + arguments.L_scheme + '.csv' ))
+    df_init = pd.read_csv(os.path.join(arguments.init_folder, arguments.dataset+ "_" + arguments.mu_scheme + arguments.L_scheme + '.csv' ))
 
     ##############################
     ## Step 2: run vi alg
@@ -144,7 +141,7 @@ def run_vi(arguments):
         init_val = np.array(df_init.iloc[i])
         # get vi results (mean, sd)
         if arguments.vi_alg == 'CSL':
-            x = vi_alg(init_val, lpdf, vi_lrt, 10000)
+            x = vi_alg(init_val, lpdf, vi_lrt, 20000)
         else:
             x = vi_alg(init_val, N , lpdf, vi_lrt, 200000)
         # compute elbo
@@ -158,7 +155,7 @@ def run_vi(arguments):
     ## step 3: save results
     #############################
     results_matrix = np.hstack((np.array(elbo_list)[:,None], np.array(VI_result_list)))
-    save(results_matrix, arguments.dataset + '_' + arguments.vi_alg + '_'+ 'SMAP_adam' + 'Ind', arguments.vi_folder)
+    save(results_matrix, arguments.dataset + '_' + arguments.vi_alg + '_'+ arguments.mu_scheme + arguments.L_scheme, arguments.vi_folder)
 
 
 

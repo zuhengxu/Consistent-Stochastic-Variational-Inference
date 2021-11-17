@@ -22,10 +22,10 @@ def get_init(arguments):
     if not os.path.exists("results/"):
         os.mkdir('results/')
     # check if intials already exists
-    # if check_exists(arguments.dataset+ "_" + arguments.mu_scheme + arguments.L_scheme, arguments.init_folder):
-        # print('Initialization already exists for' + arguments.dataset+ "_" + arguments.mu_scheme + arguments.L_scheme)
-        # print('Quitting')
-        # quit()
+    if check_exists(arguments.dataset+ "_" + arguments.mu_scheme + arguments.L_scheme, arguments.init_folder):
+        print('Initialization already exists for' + arguments.dataset+ "_" + arguments.mu_scheme + arguments.L_scheme)
+        print('Quitting')
+        quit()
 
     ###################
     ## Step 0: Setup
@@ -112,10 +112,14 @@ def run_vi(arguments):
     alg_dict = {'SVI': svi,
                 'SVI_adam': svi_adam,
                 'CSVI': csvi,
-                'CSVI_adam': csvi_adam}
+                'CSVI_adam': csvi_adam, 
+                'CSL': cs_laplace}
     vi_alg = alg_dict[arguments.vi_alg]
     # set step schedule for vi optimization
-    vi_lrt = eval(arguments.vi_stepsched)
+    if arguments.vi_alg == 'CSL':
+        def vi_lrt(i): return 0.0001
+    else:
+        vi_lrt = eval(arguments.vi_stepsched)
 
     #######################################
     ## Step 1: Read initialization results
@@ -135,7 +139,10 @@ def run_vi(arguments):
         i = size*(arguments.trial- 1) + k
         init_val = np.array(df_init.iloc[i])
         # get vi results (mean, sd)
-        x = vi_alg(init_val, N , lpdf, vi_lrt, 100000)
+        if arguments.vi_alg == 'CSL':
+            x = vi_alg(init_val, lpdf, vi_lrt, 20000)
+        else:
+            x = vi_alg(init_val, N , lpdf, vi_lrt, 100000)
         # compute elbo
         elbo = multi_ELBO(lpdf, x)
 

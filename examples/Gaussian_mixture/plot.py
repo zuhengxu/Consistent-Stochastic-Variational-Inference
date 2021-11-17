@@ -39,17 +39,17 @@ results_dir = os.path.join(sys.path[0], 'results/VI_results/')
 #########################################################
 ###synthetic data visualization
 #########################################################
-from sklearn.cluster import KMeans
-syn_dat = np.load('../data/syndat_gmm.npy')
-X = syn_dat[:,:2]
-kmeans = KMeans(4, random_state=0)
-labels = kmeans.fit(X).predict(X)
-f,a = plt.subplots()
-plt.scatter(X[:,0], X[:,1],c = labels, s=40, cmap='viridis')
-plt.xticks(fontsize = 15)
-plt.yticks(fontsize = 15)
+# from sklearn.cluster import KMeans
+# syn_dat = np.load('../data/syndat_gmm.npy')
+# X = syn_dat[:,:2]
+# kmeans = KMeans(4, random_state=0)
+# labels = kmeans.fit(X).predict(X)
+# f,a = plt.subplots()
+# plt.scatter(X[:,0], X[:,1],c = labels, s=40, cmap='viridis')
+# plt.xticks(fontsize = 15)
+# plt.yticks(fontsize = 15)
 
-f.savefig('figures/gmm_syn_dat.png',bbox_inches='tight',dpi = 500)
+# f.savefig('figures/gmm_syn_dat.png',bbox_inches='tight',dpi = 500)
 
 
 
@@ -69,12 +69,18 @@ for file in glob.glob(results_dir + "SYN_SVI_adam*.csv"):
         SVI_elbo.append(np.array(df_SVI['0']))
 
 
+CSL_elbo= []
+for file in glob.glob(results_dir + "SYN_CSL*.csv"):
+        df_CSL = pd.read_csv(file)
+        CSL_elbo.append(np.array(df_CSL['0']))
+
 SYN_ELBO = {'CSVI(adam)' : CSVI_elbo[0],
         'SVI(adam)_Ind': SVI_elbo[0],
-        'SVI(adam)_Rand': SVI_elbo[1]
+        'SVI(adam)_Rand': SVI_elbo[1],
+        'CSL': CSL_elbo[0]
 }
 syn_elbo = pd.DataFrame(SYN_ELBO)
-df_syn_elbo = syn_elbo.melt(value_vars=['CSVI(adam)', 'SVI(adam)_Ind', 'SVI(adam)_Rand'],
+df_syn_elbo = syn_elbo.melt(value_vars=['CSVI(adam)','CSL','SVI(adam)_Ind', 'SVI(adam)_Rand'],
                         var_name='method', value_name= 'ELBO', ignore_index = True)
 print(df_syn_elbo)
 
@@ -82,7 +88,7 @@ print(df_syn_elbo)
 f1, ax1 = plt.subplots()
 ax1 = sns.violinplot(x = 'method', y = 'ELBO',data = df_syn_elbo,
                     scale = 'count', inner = 'stick', bw = 0.1,
-                    order = ['CSVI(adam)', 'SVI(adam)_Ind', 'SVI(adam)_Rand'])
+                    order = ['CSVI(adam)', 'CSL', 'SVI(adam)_Ind', 'SVI(adam)_Rand'])
 plt.xlabel('')
 plt.ylabel('ELBO',fontsize = 18)
 plt.xticks(fontsize = 13)
@@ -112,15 +118,20 @@ for file in glob.glob(results_dir + "REAL_SVI_adam*.csv"):
         df_SVI = pd.read_csv(file)
         SVI_elbo.append(np.array(df_SVI['0']))
 
+CSL_elbo= []
+for file in glob.glob(results_dir + "REAL_CSL*.csv"):
+        df_CSL = pd.read_csv(file)
+        CSL_elbo.append(np.array(df_CSL['0']))
 
 REAL_ELBO = {'CSVI(adam)_Rand' : CSVI_elbo[0],
         'CSVI(adam)_Ind' : CSVI_elbo[1],
         'SVI(adam)_Rand': SVI_elbo[0],
-        'SVI(adam)_Ind': SVI_elbo[1]
+        'SVI(adam)_Ind': SVI_elbo[1], 
+        'CSL': CSL_elbo[0]
 }
 
 real_elbo = pd.DataFrame(REAL_ELBO)
-df_real_elbo = real_elbo.melt(value_vars=['CSVI(adam)_Ind' ,'SVI(adam)_Rand', 'SVI(adam)_Ind'],
+df_real_elbo = real_elbo.melt(value_vars=['CSVI(adam)_Ind' , 'CSL' ,'SVI(adam)_Rand', 'SVI(adam)_Ind'],
                         var_name='method', value_name= 'ELBO', ignore_index = True)
 print(CSVI_elbo[0])
 
@@ -128,7 +139,7 @@ print(CSVI_elbo[0])
 f2, ax2 = plt.subplots()
 ax2 = sns.violinplot(x = 'method', y = 'ELBO', data = df_real_elbo,
                     scale = 'count', inner = 'stick', bw = 0.1,
-                    order = ['CSVI(adam)_Ind' , 'SVI(adam)_Ind', 'SVI(adam)_Rand'])
+                    order = ['CSVI(adam)_Ind', 'CSL' , 'SVI(adam)_Ind', 'SVI(adam)_Rand'])
 plt.xlabel('')
 plt.ylabel('ELBO',fontsize = 18)
 plt.xticks(fontsize = 13)
