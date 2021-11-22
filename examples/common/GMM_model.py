@@ -66,6 +66,13 @@ def syn_lpdf(param):
     X = syn_dat[:, :2]
     return log_posterior(param, X, K)
 
+# def syn_lpdf(param):
+#     K = 3
+#     D = 2
+#     syn_dat = np.load( '/home/zuheng/Research/Consistent-Stochastic-Variational-Inference/examples/data/syndat_gmm.npy')
+#     X = syn_dat[:, :2]
+#     return log_posterior(param, X, K)
+
 
 def syn_pdf(param):
     # add 1500 to avoid underflow, won't affect the results

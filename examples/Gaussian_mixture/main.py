@@ -6,6 +6,7 @@ sys.path.insert(1, os.path.join(sys.path[0], '..'))
 from VI.MAP import *
 from VI.svi import *
 from VI.csvi import *
+from VI.laplace import *
 from examples.common.GMM_model import *
 from examples.common.elbo import *
 from examples.common.results import *
@@ -116,10 +117,7 @@ def run_vi(arguments):
                 'CSL': cs_laplace}
     vi_alg = alg_dict[arguments.vi_alg]
     # set step schedule for vi optimization
-    if arguments.vi_alg == 'CSL':
-        def vi_lrt(i): return 0.0001
-    else:
-        vi_lrt = eval(arguments.vi_stepsched)
+    vi_lrt = eval(arguments.vi_stepsched)
 
     #######################################
     ## Step 1: Read initialization results

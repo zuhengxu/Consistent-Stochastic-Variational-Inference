@@ -6,6 +6,7 @@ sys.path.insert(1, os.path.join(sys.path[0], '..'))
 from VI.MAP import *
 from VI.svi import *
 from VI.csvi import *
+from VI.laplace import *
 from examples.common.sparse_reg_model import *
 from examples.common.elbo import *
 from examples.common.results import *
@@ -117,10 +118,7 @@ def run_vi(arguments):
 
     vi_alg = alg_dict[arguments.vi_alg]
     # set step schedule for vi optimization
-    if arguments.vi_alg == 'CSL':
-        def vi_lrt(i): return 0.0001
-    else:
-        vi_lrt = eval(arguments.vi_stepsched)
+    vi_lrt = eval(arguments.vi_stepsched)
 
     #######################################
     ## Step 1: Read initialization results
@@ -141,7 +139,11 @@ def run_vi(arguments):
         init_val = np.array(df_init.iloc[i])
         # get vi results (mean, sd)
         if arguments.vi_alg == 'CSL':
-            x = vi_alg(init_val, lpdf, vi_lrt, 20000)
+            if arguments.mu_scheme == 'SMAP_adam':
+                num_iter = 10000
+            else: 
+                num_iter = 40000
+            x = vi_alg(init_val, lpdf, vi_lrt, num_iter)
         else:
             x = vi_alg(init_val, N , lpdf, vi_lrt, 200000)
         # compute elbo

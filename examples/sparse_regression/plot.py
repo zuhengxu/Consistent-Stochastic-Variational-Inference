@@ -52,10 +52,12 @@ SYN_ELBO = {'CSVI(adam)_Ind' : CSVI_elbo[0],
         'CSVI(adam)_Rand': CSVI_elbo[1],
         'SVI(adam)_Ind': SVI_elbo[0],
         'SVI(adam)_Rand': SVI_elbo[1], 
-        'CSL': CSL_elbo[0]}
+        'CSL': CSL_elbo[1], 
+        'CSL_Rand': CSL_elbo[0]
+        }
 
 syn_elbo = pd.DataFrame(SYN_ELBO)
-df_syn_elbo = syn_elbo.melt(value_vars=['CSVI(adam)_Ind', 'CSVI(adam)_Rand', 'CSL' ,'SVI(adam)_Ind', 'SVI(adam)_Rand'], 
+df_syn_elbo = syn_elbo.melt(value_vars=['CSVI(adam)_Ind', 'CSVI(adam)_Rand', 'CSL', 'CSL_Rand' ,'SVI(adam)_Ind', 'SVI(adam)_Rand'], 
                         var_name='method', value_name= 'ELBO', ignore_index = True) 
 print(df_syn_elbo)
 
@@ -64,12 +66,24 @@ f1, ax1 = plt.subplots()
 # sns.set_theme(style="whitegrid")
 ax1 = sns.violinplot(x = 'method', y = 'ELBO',data = df_syn_elbo, 
                     scale = 'count', inner = 'stick', bw = 0.1,
-                    order = ['CSVI(adam)_Ind', 'CSVI(adam)_Rand', 'SVI(adam)_Ind', 'SVI(adam)_Rand'])
+                    order = ['CSVI(adam)_Ind', 'CSVI(adam)_Rand', 'CSL', 'CSL_Rand' ,'SVI(adam)_Ind', 'SVI(adam)_Rand'])
 plt.xlabel('')
 plt.ylabel('ELBO', fontsize =18)
-ax1.set_xticklabels(ax1.get_xticklabels(), rotation  = -10)
+ax1.set_xticklabels(ax1.get_xticklabels(), rotation  = -15)
 ax1.tick_params(axis="both", labelsize= 13)
 f1.savefig('figures/sr_syn_elbo.png',bbox_inches='tight',dpi = 500)
+
+# # check laplace
+# f1_lap, ax1_lap = plt.subplots()
+
+# ax1_lap = sns.violinplot(x = 'method', y = 'ELBO',data = df_syn_elbo, 
+#                     scale = 'count', inner = 'stick', bw = 0.1,
+#                     order = ['CSL'])
+# plt.xlabel('')
+# plt.ylabel('ELBO', fontsize =18)
+# # ax1_lap.set_xticklabels(ax1.get_xticklabels(), rotation  = -10)
+# ax1_lap.tick_params(axis="both", labelsize= 13)
+# f1_lap.savefig('figures/lap_syn_elbo.png',bbox_inches='tight',dpi = 200)
 
 
 #########################################################
@@ -101,10 +115,11 @@ REAL_ELBO = {'CSVI(adam)' : CSVI_elbo[1],
         'CSVI(adam)_Rand' : CSVI_elbo[0],
         'SVI(adam)_Ind': SVI_elbo[1],
         'SVI(adam)_Rand': SVI_elbo[0], 
-        'CSL': CSL_elbo[0]
+        'CSL': CSL_elbo[1], 
+        'CSL_Rand': CSL_elbo[0]
 }
 real_elbo = pd.DataFrame(REAL_ELBO)
-df_real_elbo = real_elbo.melt(value_vars=['CSVI(adam)', 'CSVI(adam)_Rand','CSL' ,'SVI(adam)_Ind', 'SVI(adam)_Rand'], 
+df_real_elbo = real_elbo.melt(value_vars=['CSVI(adam)', 'CSVI(adam)_Rand','CSL', 'CSL_Rand' ,'SVI(adam)_Ind', 'SVI(adam)_Rand'], 
                         var_name='method', value_name= 'ELBO', ignore_index = True) 
 print(df_real_elbo)
 
@@ -114,24 +129,22 @@ f2, ax2 = plt.subplots()
 # sns.set_theme(style="whitegrid")
 ax2 = sns.violinplot(x = 'method', y = 'ELBO',data = df_real_elbo, 
                     scale = 'count', inner = 'stick', bw = 0.1,
-                    order = ['CSVI(adam)', 'CSVI(adam)_Rand' , 'CSL' ,'SVI(adam)_Ind', 'SVI(adam)_Rand'])
+                    order = ['CSVI(adam)', 'CSVI(adam)_Rand' , 'CSL', 'CSL_Rand' ,'SVI(adam)_Ind', 'SVI(adam)_Rand'])
 plt.xlabel('')
 plt.ylabel('ELBO', fontsize =18)
-ax2.set_xticklabels(ax2.get_xticklabels(), rotation  = -10)
+ax2.set_xticklabels(ax2.get_xticklabels(), rotation  = -15)
 ax2.tick_params(axis="both", labelsize= 13)
 f2.savefig('figures/sr_real_elbo.png',bbox_inches='tight',dpi = 500)
 
 
 
 
-#########################################################
-###p3. Posterior visualization and local optima (syn)
-#########################################################
-
-# results_dir = '/home/zuheng/Research/Asymptotic_Optimization_Properties_for_VI/code/examples/sparse_regression/results/VI_results'
+# #########################################################
+# ###p3. Posterior visualization and local optima (syn)
+# #########################################################
 
 # # read stan trace to get KDE
-# stan_result_path = '/home/zuheng/Research/Asymptotic_Optimization_Properties_for_VI/code/examples/sparse_regression/results/stan/'
+# stan_result_path = 'results/stan/'
 # trace = pickle.load(open(os.path.join(stan_result_path, 'sr_trace.pkl'), 'rb'))
 
 # f3, ax3 = plt.subplots()
@@ -151,11 +164,11 @@ f2.savefig('figures/sr_real_elbo.png',bbox_inches='tight',dpi = 500)
 
 
 
-#####################################################################
-###p4. postyerior pairwise contour plot (syn)
-#####################################################################
-# read stan trace to get KDE
-# stan_result_path = '/home/zuheng/Research/Asymptotic_Optimization_Properties_for_VI/code/examples/sparse_regression/results/stan/'
+# ####################################################################
+# ##p4. postyerior pairwise contour plot (syn)
+# ####################################################################
+# #read stan trace to get KDE
+# stan_result_path = 'results/stan/'
 # trace = pickle.load(open(os.path.join(stan_result_path, 'sr_trace.pkl'), 'rb'))
 
 
@@ -175,11 +188,16 @@ f2.savefig('figures/sr_real_elbo.png',bbox_inches='tight',dpi = 500)
 
 # f4.savefig('figures/sr_syn_pairwise_countour.png',bbox_inches='tight',dpi = 500)
 
+
+
+
+
+
 # #####################################################################
 # ###p5. beta12; beta23 countour plot: Posterior visualization and local optima (syn) 
 # #####################################################################
 # # read stan trace to get KDE
-# stan_result_path = '/home/zuheng/Research/Asymptotic_Optimization_Properties_for_VI/code/examples/sparse_regression/results/stan/'
+# stan_result_path = 'results/stan/'
 # trace = pickle.load(open(os.path.join(stan_result_path, 'sr_trace.pkl'), 'rb'))
 # df_beta = pd.DataFrame(trace['beta'])
 # df_beta.columns = ['beta'+ str(i+1) for i in range(5)]
@@ -187,10 +205,10 @@ f2.savefig('figures/sr_real_elbo.png',bbox_inches='tight',dpi = 500)
 # dff = df_beta[df_beta.index % 10 == 0]
 
 # # read VI results
-# df_cs = pd.read_csv('/home/zuheng/Research/Asymptotic_Optimization_Properties_for_VI/code/examples/sparse_regression/results/VI_results/SYN_CSVI_adam_SMAP_adamInd.csv')
-# df_csrand = pd.read_csv('/home/zuheng/Research/Asymptotic_Optimization_Properties_for_VI/code/examples/sparse_regression/results/VI_results/SYN_CSVI_adam_SMAP_adamRandom.csv')
-# df_srand = pd.read_csv('/home/zuheng/Research/Asymptotic_Optimization_Properties_for_VI/code/examples/sparse_regression/results/VI_results/SYN_SVI_adam_PriorRandom.csv')
-
+# df_cs = pd.read_csv('results/VI_results/SYN_CSVI_adam_SMAP_adamInd.csv')
+# df_csrand = pd.read_csv('results/VI_results/SYN_CSVI_adam_SMAP_adamRandom.csv')
+# df_srand = pd.read_csv('results/VI_results/SYN_SVI_adam_PriorRandom.csv')
+# df_lap = pd.read_csv('results/VI_results/SYN_CSL_SMAP_adamRandom.csv')
 
 # f6, ax6 = plt.subplots(1,2,figsize=(10,2.8))
 # sns.kdeplot(data=dff, x="beta1", y="beta2", fill = True, color = "grey", bw_adjust= 0.5, ax= ax6[0])
@@ -244,3 +262,25 @@ f2.savefig('figures/sr_real_elbo.png',bbox_inches='tight',dpi = 500)
 # f6.savefig('figures/sr_syn_vis.png',bbox_inches='tight',dpi = 500)
 
 
+
+# # ###########3
+# # #### slice plot
+# # #######################
+# # from examples.common.sparse_reg_model import syn_lpdf
+# # df_init = pd.read_csv('results/initials/SYN_SMAP_adamInd.csv')
+# # res_csl = np.array(df_lap)[0, 1:]
+# # init = np.array(df_init)[0]
+
+# # d, mu_csl, L_csl = de_flatten(res_csl)
+# # d, smap, L_init = de_flatten(init) 
+
+
+
+# # f_lap, ax_lap = plt.subplots()
+# # def lpdf_slice(x):
+# #     a = np.concatenate((np.array([x]), smap[1:]))
+# #     return -syn_lpdf(a)
+
+# # x = np.linspace(-20, 20, 1000)
+# # ax_lap.plot(x, [lpdf_slice(a) for a in x])
+# # # f_lap.savefig('figures/slice.png',bbox_inches='tight',dpi = 500)

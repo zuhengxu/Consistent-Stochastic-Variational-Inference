@@ -69,3 +69,7 @@ def adam_update(i, x, g, m, v, lrt, b1=0.9, b2=0.999, eps=1e-8):
     vhat = v / (1 - b2**(i + 1))
     x = x - lrt*mhat/(np.sqrt(vhat) + eps)
     return m, v, x
+
+def sgd_update(i, x, g, lrt):
+    x = x- lrt(i)*g
+    return x 

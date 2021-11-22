@@ -30,10 +30,17 @@ do
     done
 done
 
+for dataset in "SYN"
+do 
+    for ID in 1 2 3 4 5 
+    do 
+        python3 main.py --dataset $dataset --mu_scheme "Prior" --L_scheme "Ind" --trial $ID run_vi --vi_alg "CSL" --vi_stepsched 'lambda iter: 0.1' &
+        python3 main.py --dataset $dataset --mu_scheme "SMAP_adam" --L_scheme "Ind" --trial $ID run_vi --vi_alg "CSL" --vi_stepsched 'lambda iter: 0.0001' &
+    done
+done     
 
 wait 
 echo -e 'VI done'
-
 
 ##########
 ## real-data example
@@ -68,19 +75,10 @@ do
         python3 main.py --dataset $dataset --mu_scheme "Prior" --L_scheme "Random" --trial $ID run_vi --vi_alg "SVI_adam" --vi_stepsched 'lambda iter: 0.001'&
         python3 main.py --dataset $dataset --mu_scheme "SMAP_adam" --L_scheme "Ind" --trial $ID run_vi --vi_alg "CSVI_adam" --vi_stepsched 'lambda iter: 0.001'&
         python3 main.py --dataset $dataset --mu_scheme "SMAP_adam" --L_scheme "Random" --trial $ID run_vi --vi_alg "CSVI_adam" --vi_stepsched 'lambda iter: 0.001'&
+        python3 main.py --dataset $dataset --mu_scheme "Prior" --L_scheme "Ind" --trial $ID run_vi --vi_alg "CSL" --vi_stepsched 'lambda iter: 0.005' &
+        python3 main.py --dataset $dataset --mu_scheme "SMAP_adam" --L_scheme "Ind" --trial $ID run_vi --vi_alg "CSL" --vi_stepsched 'lambda iter: 0.0001' &
     done
 done
 
 wait
 echo -e 'REAL VI done'
-
-#######################
-### add laplace 
-########################
-for dataset in 'SYN' 'REAL'
-do 
-    for ID in 1 2 3 4 5 
-    do 
-    python3 main.py --dataset $dataset --mu_scheme "SMAP_adam" --L_scheme "Ind" --trial $ID run_vi --vi_alg "CSL" &
-    done 
-done 
