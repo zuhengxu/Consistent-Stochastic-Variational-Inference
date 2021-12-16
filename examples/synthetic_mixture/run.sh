@@ -68,3 +68,16 @@ done
 wait
 echo -e 'vi_stepsched sensitivity done'
 
+###########################
+## RSVI results wrt different regularization constant 
+###########################
+for alg in 'RSVI' 'RSVI_OPT'
+do 
+    for lmd in 0.1 0.5 1 2 5 
+    do 
+        python3 main.py --alg $alg --vi_folder "results/rsvi/" --vi_title "reg" run_rsvi --regularizer $lmd --vi_stepsched 15 &
+    done 
+done 
+
+wait 
+echo -e 'RSVI done'

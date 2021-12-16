@@ -31,6 +31,15 @@ do
 done
 
 for dataset in "SYN"
+do  
+    for ID in 1 2 3 4 5
+    do 
+        python3 main.py --dataset $dataset --mu_scheme "SMAP_adam" --L_scheme "Ind" --trial $ID run_vi --vi_alg "SVI_adam" &
+    done
+done
+
+
+for dataset in "SYN"
 do 
     for ID in 1 2 3 4 5 
     do 
@@ -38,6 +47,34 @@ do
         python3 main.py --dataset $dataset --mu_scheme "SMAP_adam" --L_scheme "Ind" --trial $ID run_vi --vi_alg "CSL" --vi_stepsched 'lambda iter: 0.0001' &
     done
 done     
+
+
+
+### regularized SVI
+for dataset in "SYN"
+do 
+    for ID in 1 2 3 4 5
+    do 
+        for lmd in 0.1 0.5 1 2 5 10
+        do 
+            python3 main.py --dataset $dataset  --mu_scheme "Prior" --L_scheme "Random" --trial $ID run_rsvi --vi_alg "RSVI"  --regularizer $lmd &
+        done 
+    done 
+done 
+
+wait 
+echo -e 'SYN RSVI done'
+
+for dataset in "SYN"
+do 
+    for ID in 1 2 3 4 5 
+    do
+        for lmd in 0.1 0.5 1 2 5 10
+        do 
+            python3 main.py --dataset $dataset  --mu_scheme "SMAP_adam" --L_scheme "Ind" --trial $ID run_rsvi --vi_alg "RSVI"  --regularizer $lmd &
+        done 
+    done 
+done 
 
 wait 
 echo -e 'VI done'

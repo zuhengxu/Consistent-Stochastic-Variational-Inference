@@ -157,6 +157,83 @@ def run_vi(arguments):
 
 
 
+
+
+
+#######################################################
+#######################################################
+### run RSVI inference 100 rep
+#######################################################
+#######################################################
+
+def run_rsvi(arguments):
+    if not os.path.exists("results/"):
+        os.mkdir('results/')
+    # check if results already exists
+    if check_exists(arguments.dataset + '_' + arguments.vi_alg + '_'+ arguments.mu_scheme + arguments.L_scheme, arguments.vi_folder):
+        print('VI results already exists for' + arguments.dataset + '_' + arguments.vi_alg + '_'+ arguments.mu_scheme + arguments.L_scheme)
+        print('Quitting')
+        quit()
+
+    #######################
+    ## Step 0: Setup
+    #######################
+    np.random.seed(int(int(arguments.vi_alg, base = 32)/1e5 + arguments.trial))
+
+    #mixture lpdf
+    lpdf_dict = {'SYN': syn_lpdf,
+                'REAL': real_lpdf}
+    lpdf = lpdf_dict[arguments.dataset]
+    # gets sample size N
+    Data_size = {
+        'SYN': 400,
+        'REAL': 500
+    }
+    N = Data_size[arguments.dataset]
+    
+    vi_alg = rsvi_adam
+    # set step schedule for vi optimization
+    vi_lrt = eval(arguments.vi_stepsched)
+
+    #######################################
+    ## Step 1: Read initialization results
+    #######################################
+    df_init = pd.read_csv(os.path.join(arguments.init_folder, arguments.dataset+ "_" + arguments.mu_scheme + arguments.L_scheme + '.csv' ))
+
+    ##############################
+    ## Step 2: run vi alg
+    ##############################
+    print('Running', arguments.vi_alg)
+
+    VI_result_list = []
+    elbo_list = []
+    lmd_list = []
+    #break 100 interation into 2 trials
+    size = int(df_init.shape[0]/5)
+    for k in range(size):
+        i = size*(arguments.trial- 1) + k
+        init_val = np.array(df_init.iloc[i])
+        # get vi results (mean, sd)
+        x = vi_alg(init_val, N , lpdf, vi_lrt, 100000, arguments.regularizer)
+        # compute elbo
+        elbo = multi_ELBO(lpdf, x)
+
+        # append to list
+        VI_result_list.append(x)
+        elbo_list.append(elbo)
+        lmd_list.append(arguments.regularizer)
+
+    #############################
+    ## step 3: save results
+    #############################
+    results_matrix = np.hstack((np.array(lmd_list)[:, None], np.array(elbo_list)[:,None], np.array(VI_result_list)))
+    save(results_matrix, arguments.dataset + '_' + arguments.vi_alg + '_'+ arguments.mu_scheme + arguments.L_scheme, arguments.vi_folder)
+
+
+
+
+
+
 ###########################
 ###########################
 ### Parse arguments
@@ -169,6 +246,8 @@ get_init_subparser = subparsers.add_parser('get_init', help = 'Get initializatio
 get_init_subparser.set_defaults(func = get_init)
 run_vi_subparser = subparsers.add_parser('run_vi', help = 'Run GVB inference')
 run_vi_subparser.set_defaults(func = run_vi)
+run_rsvi_subparser = subparsers.add_parser('run_rsvi', help='Run RSVI inference')
+run_rsvi_subparser.set_defaults(func=run_rsvi)
 
 parser.add_argument('--dataset', type  = str, default= "SYN", help = "The choice of dataset")
 parser.add_argument('--trial', type = int, default = 1 ,help = "Index of the trial")
@@ -184,6 +263,11 @@ get_init_subparser.add_argument('--map_stepsched', type = str, default= 'lambda 
 
 run_vi_subparser.add_argument('--vi_stepsched', type= str, default  = 'lambda itr: 0.01', help = 'VI optimization step schedule')
 run_vi_subparser.add_argument('--vi_alg', type= str, default  = 'CSVI_adam', help = 'VI optimization algorithm')
+
+
+run_rsvi_subparser.add_argument('--vi_stepsched', type= str, default  = 'lambda itr: 0.01', help = 'VI optimization step schedule')
+run_rsvi_subparser.add_argument('--regularizer', type=float, default=0.0, help='RSVI regularization constant')
+run_rsvi_subparser.add_argument('--vi_alg', type= str, default  = 'CSVI_adam', help = 'VI optimization algorithm')
 
 arguments = parser.parse_args()
 arguments.func(arguments)

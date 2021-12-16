@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 # import matplotlib.patches as mpatches
 import seaborn as sns
 import pandas as pd
-# from seaborn import palettes
+from seaborn import palettes
 import os, sys
 sys.path.insert(1, os.path.join(sys.path[0], '../..'))
 from examples.common.synthetic_model import *

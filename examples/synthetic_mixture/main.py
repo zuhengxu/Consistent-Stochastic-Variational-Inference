@@ -8,6 +8,7 @@ from examples.common.elbo import *
 from examples.common.synthetic_model import *
 from VI.csvi import *
 from VI.svi import *
+from VI.laplace import *
 from VI.MAP import *
 
 
@@ -176,9 +177,93 @@ def run_vi(arguments):
 
     if arguments.alg == 'CSL':
         df = df.replace('CSVI', 'CSL')
-
     save(df, arguments.vi_title + arguments.alg, arguments.vi_folder)
 
+
+#######################################################
+#######################################################
+# run RSVI inference: alg(step_sched, init_folder, init_title) 100 rep
+#######################################################
+#######################################################
+
+def run_rsvi(arguments):
+    if not os.path.exists("results/"):
+        os.mkdir('results/')
+    # check if results already exists
+    if check_exists(arguments.vi_title + arguments.alg, arguments.vi_folder):
+        print('VI results already exists for' + arguments.alg)
+        print('Quitting')
+        quit()
+
+    #######################
+    # Step 0: Setup
+    #######################
+    np.random.seed(int(int(arguments.alg, base=32)/1000))
+
+    # mixture lpdf
+    def lpdf(x): return log_gs_mix(x)
+
+
+    # choose the alg to run
+    vi_alg = rsvi
+    # set step schedule for vi optimization
+    def vi_lrt(i): return arguments.vi_stepsched/(1 + i)
+
+    #######################################
+    # Step 1: Read initialization results
+    #######################################
+    if arguments.alg == 'RSVI':
+        df_init = pd.read_csv(os.path.join(
+            arguments.init_folder, arguments.init_title + 'SVI.csv'))
+    elif arguments.alg == 'RSVI_OPT':
+        df_init = pd.read_csv(os.path.join(
+            arguments.init_folder, arguments.init_title + 'SVI_OPT.csv'))
+    else:
+        df_init = pd.read_csv(os.path.join(
+                arguments.init_folder, arguments.init_title + arguments.alg + '.csv'))
+
+    ##############################
+    # Step 2: run vi alg
+    ##############################
+    print('Running', arguments.alg)
+
+    mean_list = []
+    sd_list = []
+    elbo_list = []
+
+    for i in range(df_init.shape[0]):
+        mean_init, sd_init = np.array([df_init.loc[i, 'mean_initial']]), np.array([df_init.loc[i, 'sd_initial']])
+        init_val, _ = flatten([mean_init, sd_init])
+
+        # get vi results (mean, sd)
+        x = vi_alg(init_val, 1, lpdf, vi_lrt, 100000, arguments.regularizer)
+        
+        mean_vi, sd_vi = np.array([x[0]]), np.array([x[1]])
+        # compute elbo
+        elbo = GVB_ELBO(lpdf, mean_vi, sd_vi, 1000)
+
+        # append to list
+        mean_list.append(mean_vi[0])
+        sd_list.append(sd_vi[0])
+        elbo_list.append(elbo[0])
+
+    #############################
+    # step 3: save results
+    #############################
+    df_results = pd.DataFrame({
+        'mean_vi': mean_list,
+        'sd_vi': sd_list,
+        'elbo': elbo_list,
+        'vi_stepsched': arguments.vi_stepsched, 
+        'lmd': arguments.regularizer
+    })
+    df = df_init.join(df_results)
+
+    if arguments.alg == 'RSVI':
+        df = df.replace('SVI', 'RSVI')
+    elif arguments.alg == 'RSVI_OPT':
+        df = df.replace('SVI_OPT', 'RSVI_OPT')
+    save(df, arguments.vi_title + arguments.alg, arguments.vi_folder)
 
 
 
@@ -190,11 +275,12 @@ def run_vi(arguments):
 ###########################
 parser = argparse.ArgumentParser(description=" Runs synthetic mixture example")
 subparsers = parser.add_subparsers(help='sub-command help')
-get_init_subparser = subparsers.add_parser(
-    'get_init', help='Get initialization for GVB')
+get_init_subparser = subparsers.add_parser('get_init', help='Get initialization for GVB')
 get_init_subparser.set_defaults(func=get_init)
 run_vi_subparser = subparsers.add_parser('run_vi', help='Run GVB inference')
 run_vi_subparser.set_defaults(func=run_vi)
+run_rsvi_subparser = subparsers.add_parser('run_rsvi', help='Run RSVI inference')
+run_rsvi_subparser.set_defaults(func=run_rsvi)
 
 parser.add_argument('--alg', type=str, default="CSVI",
                     help="The name of the GVB algorithm to use")
@@ -215,7 +301,12 @@ get_init_subparser.add_argument(
     '--map_stepsched', type=str, default='lambda itr: 200./(1+ itr)', help='MAP initialization step schedule')
 
 run_vi_subparser.add_argument(
-    '--vi_stepsched', type=int, default=10, help='VI optimization step schedule')
+    '--vi_stepsched', type=int, default=10, help='vi optimization step schedule')
+
+run_rsvi_subparser.add_argument(
+    '--vi_stepsched', type=int, default=10, help='vi optimization step schedule')
+run_rsvi_subparser.add_argument(
+    '--regularizer', type=float, default=0.0, help='RSVI regularization constant')
 
 arguments = parser.parse_args()
 arguments.func(arguments)
