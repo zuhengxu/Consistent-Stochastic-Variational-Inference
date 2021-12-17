@@ -47,7 +47,7 @@ df3 = pd.read_csv('/home/zuheng/Research/Consistent-Stochastic-Variational-Infer
 df3 = (df3.assign(Regularization = 0).rename(columns = {'0': 'ELBO'}) )[['Regularization', 'ELBO']]
 df2 = pd.read_csv('/home/zuheng/Research/Consistent-Stochastic-Variational-Inference/examples/sparse_regression/results/VI_results/SYN_RSVI_SMAP_adamInd.csv')
 df2 = df2.rename(columns = {'0': 'Regularization', '1': 'ELBO'})[['Regularization', 'ELBO']]
-df_syn_opt = pd.concat([df0, df1])
+df_syn_opt = pd.concat([df2, df3])
 
 f1, ax1 = plt.subplots()
 ax1 = sns.violinplot(x = 'Regularization', y = 'ELBO',data = df_syn_opt,
