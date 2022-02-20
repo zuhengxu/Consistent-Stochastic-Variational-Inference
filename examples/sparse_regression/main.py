@@ -13,7 +13,6 @@ from examples.common.results import *
 
 
 
-
 ###########################
 ###########################
 ### VI initialization
@@ -44,7 +43,7 @@ def get_init(arguments):
     lpdf = posterior_dict[arguments.dataset]
     alpha = arguments.alpha
     map_lrt = eval(arguments.map_stepsched)
-    num_iters = 40000
+    num_iters = 200000 
     mcS = 100 # mc sample size for smooth gradient
     # define map/smap functions with same arguments
     SMAP = lambda x0: smooth_MAP(x0, lpdf, map_lrt, alpha, mcS, num_iters)
@@ -56,7 +55,7 @@ def get_init(arguments):
     #######################################
     init_list = []
     # 100 repititions for each setting
-    for i in range(20):
+    for i in range(10):
         # intialization for mean
         mu_random = prior_sample(1, D, tau1, tau2)[0]
         mu_init_dict = {'Prior': 'mu_random',
@@ -69,7 +68,7 @@ def get_init(arguments):
         # append to the list
         init_list.append(init)
         print('intialism = ', init)
-
+        print(arguments.mu_scheme + arguments.L_scheme, i + 1, '/', 10)
     #######################################
     ## Step 2: save results
     #######################################
@@ -133,17 +132,13 @@ def run_vi(arguments):
     VI_result_list = []
     elbo_list = []
     #break 100 interation into 2 trials
-    size = int(df_init.shape[0]/5)
+    size = int(df_init.shape[0]/20)
     for k in range(size):
         i = size*(arguments.trial- 1) + k
         init_val = np.array(df_init.iloc[i])
         # get vi results (mean, sd)
         if arguments.vi_alg == 'CSL':
-            if arguments.mu_scheme == 'SMAP_adam':
-                num_iter = 10000
-            else: 
-                num_iter = 40000
-            x = vi_alg(init_val, lpdf, vi_lrt, num_iter)
+            x = vi_alg(init_val, lpdf, vi_lrt, 40000)
         else:
             x = vi_alg(init_val, N , lpdf, vi_lrt, 200000)
         # compute elbo
@@ -152,7 +147,7 @@ def run_vi(arguments):
         # append to list
         VI_result_list.append(x)
         elbo_list.append(elbo)
-
+        print(arguments.vi_alg + '_' + arguments.mu_scheme + arguments.L_scheme, k + 1, '/', size)
     #############################
     ## step 3: save results
     #############################
@@ -172,10 +167,10 @@ def run_rsvi(arguments):
     if not os.path.exists("results/"):
         os.mkdir('results/')
     # check if results already exists
-    # if check_exists(arguments.dataset + '_' + arguments.vi_alg + '_'+ arguments.mu_scheme + arguments.L_scheme, arguments.vi_folder):
-    #     print('VI results already exists for' + arguments.dataset + '_' + arguments.vi_alg + '_'+ arguments.mu_scheme + arguments.L_scheme)
-    #     print('Quitting')
-    #     quit()
+    if check_exists(arguments.dataset + '_' + arguments.vi_alg + '_'+ arguments.mu_scheme + arguments.L_scheme, arguments.vi_folder):
+        print('VI results already exists for' + arguments.dataset + '_' + arguments.vi_alg + '_'+ arguments.mu_scheme + arguments.L_scheme)
+        print('Quitting')
+        quit()
 
     #######################
     ## Step 0: Setup
@@ -250,7 +245,7 @@ run_rsvi_subparser.set_defaults(func=run_rsvi)
 
 parser.add_argument('--dataset', type  = str, default= "SYN", help = "The choice of dataset")
 parser.add_argument('--trial', type = int, default = 1 ,help = "Index of the trial")
-parser.add_argument('--alpha', type = int, default= 2 , help = 'Smoothing variance')
+parser.add_argument('--alpha', type = float, default= 2 , help = 'Smoothing variance')
 parser.add_argument('--init_folder', type = str, default = 'results/initials/', help = 'Folder of saving initialization results')
 # parser.add_argument('--init_title', type = str, default = 'syn_', help = 'Prefix of the intialization file')
 parser.add_argument('--vi_folder', type = str, default = 'results/VI_results/', help = 'Folder of saving vi results')

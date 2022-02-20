@@ -67,9 +67,33 @@ def adam_update(i, x, g, m, v, lrt, b1=0.9, b2=0.999, eps=1e-8):
     v = (1 - b2) * (g**2) + b2 * v  # Second moment estimate.
     mhat = m / (1 - b1**(i + 1))    # Bias correction.
     vhat = v / (1 - b2**(i + 1))
-    x = x - lrt*mhat/(np.sqrt(vhat) + eps)
-    return m, v, x
+    x1 = x - lrt*mhat/(np.sqrt(vhat) + eps)
+    return m, v, x1, x
 
 def sgd_update(i, x, g, lrt):
-    x = x- lrt(i)*g
-    return x 
+    x1 = x- lrt*g
+    return x1, x 
+
+
+def backtracking_update(x, g, f, t = 1, b = 0.5):
+    # choose step size
+    while ( f(x - t*g) > (f(x) - 0.5*t*np.sum(g**2.0)) ):
+        t *= b  
+    x1 = x - t*g 
+    # print(t)
+    t = 10.0*t 
+    return x1, t
+
+# f = lambda x: np.sum((x*np.array([100, 0.1]))**2)
+# g = grad(f)
+
+# x = 100.0*np.ones(2)
+# for i in range(10000):
+#     G = g(x)
+#     x = backtracking_update(x,G,f)
+#     print(x)
+
+
+
+
+

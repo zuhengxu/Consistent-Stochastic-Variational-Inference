@@ -77,11 +77,11 @@ for file in glob.glob(results_dir + "SYN_CSL*.csv"):
 SYN_ELBO = {'CSVI(adam)' : CSVI_elbo[0],
         'SVI(adam)_Ind': SVI_elbo[0],
         'SVI(adam)_Rand': SVI_elbo[1],
-        'CSL': CSL_elbo[0], 
-        'CSL_Rand': CSL_elbo[1]
+        'CLA': CSL_elbo[0], 
+        'Laplace': CSL_elbo[1]
 }
 syn_elbo = pd.DataFrame(SYN_ELBO)
-df_syn_elbo = syn_elbo.melt(value_vars=['CSVI(adam)','CSL', 'CSL_Rand' ,'SVI(adam)_Ind', 'SVI(adam)_Rand'],
+df_syn_elbo = syn_elbo.melt(value_vars=['CSVI(adam)','CLA', 'Laplace' ,'SVI(adam)_Ind', 'SVI(adam)_Rand'],
                         var_name='method', value_name= 'ELBO', ignore_index = True)
 print(df_syn_elbo)
 
@@ -89,7 +89,7 @@ print(df_syn_elbo)
 f1, ax1 = plt.subplots()
 ax1 = sns.violinplot(x = 'method', y = 'ELBO',data = df_syn_elbo[df_syn_elbo['ELBO'] > -1000],
                     scale = 'count', inner = 'stick', bw = 0.1,
-                    order = ['CSVI(adam)', 'CSL', 'CSL_Rand', 'SVI(adam)_Ind', 'SVI(adam)_Rand'])
+                    order = ['CSVI(adam)', 'CLA', 'Laplace', 'SVI(adam)_Ind', 'SVI(adam)_Rand'])
 plt.xlabel('')
 plt.ylabel('ELBO',fontsize = 18)
 plt.xticks(fontsize = 13)
@@ -141,12 +141,12 @@ REAL_ELBO = {'CSVI(adam)_Rand' : CSVI_elbo[0],
         'CSVI(adam)_Ind' : CSVI_elbo[1],
         'SVI(adam)_Rand': SVI_elbo[0],
         'SVI(adam)_Ind': SVI_elbo[1], 
-        'CSL': CSL_elbo[1], 
-        'CSL_Rand': CSL_elbo[0]
+        'CLA': CSL_elbo[1], 
+        'Laplace': CSL_elbo[0]
 }
 
 real_elbo = pd.DataFrame(REAL_ELBO)
-df_real_elbo = real_elbo.melt(value_vars=['CSVI(adam)_Ind' , 'CSL',  'CSL_Rand', 'SVI(adam)_Rand', 'SVI(adam)_Ind'],
+df_real_elbo = real_elbo.melt(value_vars=['CSVI(adam)_Ind' , 'CLA',  'Laplace', 'SVI(adam)_Rand', 'SVI(adam)_Ind'],
                         var_name='method', value_name= 'ELBO', ignore_index = True)
 print(df_real_elbo)
 
@@ -154,7 +154,7 @@ print(df_real_elbo)
 f2, ax2 = plt.subplots()
 ax2 = sns.violinplot(x = 'method', y = 'ELBO', data = df_real_elbo,
                     scale = 'count', inner = 'stick', bw = 0.1,
-                    order = ['CSVI(adam)_Ind', 'CSL', 'CSL_Rand','SVI(adam)_Ind', 'SVI(adam)_Rand'])
+                    order = ['CSVI(adam)_Ind', 'CLA', 'Laplace','SVI(adam)_Ind', 'SVI(adam)_Rand'])
 plt.xlabel('')
 plt.ylabel('ELBO',fontsize = 18)
 plt.xticks(fontsize = 13)

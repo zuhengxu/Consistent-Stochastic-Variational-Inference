@@ -23,6 +23,15 @@ def log_prior(param, tau1, tau2):
     A = np.log1p(0.5/T - 1) - 0.5/(T**2) * P**2
     return np.sum(logsumexp( A, axis = 0), axis =1)
 
+# from scipy.stats import mvnorm 
+# def sci_lpdf(param, t1, t2):
+#     # d = param.shape[1]
+#     rv1 = mvnorm(0, t1)
+#     rv2 = mvnorm(0, t2)
+#     return rv1.logpdf(param) + rv2.logpdf(param)
+
+
+# sci_lpdf(x0, 1, 10)
 
 def log_posterior(param,data, sigma, tau1,tau2):
     return log_likelihood(param, data, sigma) + log_prior(param, tau1, tau2)

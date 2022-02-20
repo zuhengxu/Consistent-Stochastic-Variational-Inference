@@ -13,7 +13,7 @@ wait
 echo -e 'initialization done'
 
 
-for alg in 'CSVI' 'CSVI_RSD' 'CSL'
+for alg in 'CSVI' 'CSVI_RSD' 'CSL' 'LAP'
 do
     python3 main.py  --alg $alg run_vi --vi_stepsched 5 &
 done

@@ -113,7 +113,8 @@ def run_vi(arguments):
         'SVI_Ind': 'SVI',
         'SVI_SMAP': 'SVI',
         'SVI_OPT': 'SVI', 
-        'CSL': 'LAPLACE'
+        'CSL': 'LAPLACE',
+        'LAP': 'LAPLACE'
     }
 
     # choose the alg to run
@@ -132,6 +133,9 @@ def run_vi(arguments):
     if arguments.alg == 'CSL':
         df_init = pd.read_csv(os.path.join(
             arguments.init_folder, arguments.init_title + 'CSVI.csv'))
+    elif arguments.alg == 'LAP':
+        df_init = pd.read_csv(os.path.join(
+            arguments.init_folder, arguments.init_title + 'SVI.csv'))
     else:
         df_init = pd.read_csv(os.path.join(
                 arguments.init_folder, arguments.init_title + arguments.alg + '.csv'))
@@ -152,6 +156,8 @@ def run_vi(arguments):
         # get vi results (mean, sd)
         if arguments.alg == 'CSL':
             x = vi_alg(init_val, lpdf, vi_lrt, 5000)
+        elif arguments.alg == 'LAP':
+            x = vi_alg(init_val, lpdf, vi_lrt, 20000)
         else:
             x = vi_alg(init_val, 1, lpdf, vi_lrt, 100000)
         
@@ -177,6 +183,8 @@ def run_vi(arguments):
 
     if arguments.alg == 'CSL':
         df = df.replace('CSVI', 'CSL')
+    elif arguments.alg == 'LAP':
+        df = df.replace('SVI', 'LAP')
     save(df, arguments.vi_title + arguments.alg, arguments.vi_folder)
 
 
