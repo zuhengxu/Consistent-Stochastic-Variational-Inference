@@ -66,7 +66,7 @@ df_syn_elbo.replace('CSL', 'CLA', inplace=True)
 f1, ax1 = plt.subplots()
 # sns.set_theme(style="whitegrid")
 ax1 = sns.violinplot(x = 'method', y = 'ELBO',data = df_syn_elbo, 
-                    scale = 'count', inner = 'stick', bw = 0.1,
+                    scale = 'count', inner = 'stick', bw = 0.03,
                     order = ['CSVI(adam)_Ind', 'CSVI(adam)_Rand', 'CLA', 'Laplace' ,'SVI(adam)_Ind', 'SVI(adam)_Rand'])
 plt.xlabel('')
 plt.ylabel('ELBO', fontsize =18)
@@ -131,7 +131,7 @@ df_real_elbo.replace('CSL', 'CLA', inplace=True)
 f2, ax2 = plt.subplots()
 # sns.set_theme(style="whitegrid")
 ax2 = sns.violinplot(x = 'method', y = 'ELBO',data = df_real_elbo, 
-                    scale = 'count', inner = 'stick', bw = 0.1,
+                    scale = 'count', inner = 'stick', bw = 0.05,
                     order = ['CSVI(adam)', 'CSVI(adam)_Rand' , 'CLA', 'Laplace' ,'SVI(adam)_Ind', 'SVI(adam)_Rand'])
 plt.xlabel('')
 plt.ylabel('ELBO', fontsize =18)

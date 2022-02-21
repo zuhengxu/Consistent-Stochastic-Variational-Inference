@@ -91,7 +91,7 @@ f1.savefig('figures/mixture.png',bbox_inches='tight',dpi = 500)
 f2, ax2 = plt.subplots()
 # print(df_results)
 ax2 = sns.violinplot(x = 'method', y = 'elbo',data = df_results,
-                    scale = 'count', inner = 'stick', palette= col_pal, bw = 0.15,
+                    scale = 'count', inner = 'stick', palette= col_pal, bw = 0.02,
                     order = ['CSVI', 'CSVI_RSD', 'CLA', 'Laplace','SVI', 'SVI_Ind', 'SVI_SMAP', 'SVI_OPT'])
 plt.xlabel('')
 plt.ylabel('ELBO',fontsize = 18)
@@ -108,8 +108,8 @@ f2.savefig('figures/mixture_elbo.png',bbox_inches='tight',dpi = 500)
 # # #########################################################
 # f3, ax3 = plt.subplots(1, 5,figsize=(20,2.8))
 # X_range  = np.linspace(-40, 40, 4001)
-# df_csvi = pd.read_csv(os.path.join('results/sensitivity/','alpha_elbo_CSVI'+ '.csv' ))
-# df_csvi_rsd  = pd.read_csv(os.path.join('results/sensitivity/','alpha_elbo_CSVI_RSD'+ '.csv' ))
+df_csvi = pd.read_csv(os.path.join('results/sensitivity/','alpha_elbo_CSVI'+ '.csv' ))
+df_csvi_rsd  = pd.read_csv(os.path.join('results/sensitivity/','alpha_elbo_CSVI_RSD'+ '.csv' ))
 
 # c = 0
 # for alpha in [10, 20, 50, 100, 200]:
@@ -142,34 +142,34 @@ f2.savefig('figures/mixture_elbo.png',bbox_inches='tight',dpi = 500)
 
 
 
-# # ########################################################################
-# # ###p4. voilin plots of csvi/csvi_rsd across different alpha
-# # ########################################################################
-# df_csvi_add = pd.read_csv(os.path.join('results/sensitivity/','alpha_add_CSVI'+ '.csv' ))
-# df_csvi_rsd_add  = pd.read_csv(os.path.join('results/sensitivity/','alpha_add_CSVI_RSD'+ '.csv' ))
-# df_csvi_Add = pd.read_csv(os.path.join('results/sensitivity/','alpha_Add_CSVI'+ '.csv' ))
-# df_csvi_rsd_Add  = pd.read_csv(os.path.join('results/sensitivity/','alpha_Add_CSVI_RSD'+ '.csv' ))
+# ########################################################################
+# ###p4. voilin plots of csvi/csvi_rsd across different alpha
+# ########################################################################
+df_csvi_add = pd.read_csv(os.path.join('results/sensitivity/','alpha_add_CSVI'+ '.csv' ))
+df_csvi_rsd_add  = pd.read_csv(os.path.join('results/sensitivity/','alpha_add_CSVI_RSD'+ '.csv' ))
+df_csvi_Add = pd.read_csv(os.path.join('results/sensitivity/','alpha_Add_CSVI'+ '.csv' ))
+df_csvi_rsd_Add  = pd.read_csv(os.path.join('results/sensitivity/','alpha_Add_CSVI_RSD'+ '.csv' ))
 
-# df_alpha = pd.concat([df_csvi, df_csvi_rsd,df_csvi_add, df_csvi_rsd_add,df_csvi_Add, df_csvi_rsd_Add], 
-#                     join = "inner", ignore_index= True)
-# df_alpha= df_alpha.loc[df_alpha['alpha'].isin((20, 50, 200, 2000, 10000, 100000))]
-# df_alpha_outlier = df_alpha[df_alpha['elbo']< -3.5]
-# print(df_alpha_outlier)
-# # df_alpha_outlier = 
-# f4, ax4 = plt.subplots()
-# ax4 = sns.violinplot(x = 'alpha', y = 'elbo',data = df_alpha,
-#                     hue = 'method', split = True ,palette= col_pal,
-#                     scale = 'count', inner = 'stick',bw = 0.08)
-# ax4 = sns.stripplot(x = 'alpha', y = 'elbo', data = df_alpha_outlier,
-#                     hue = 'method', palette= col_pal,  
-#                     linewidth= 1, jitter=0.01)
-# plt.xlabel('alpha', fontsize = 18)
-# plt.ylabel('ELBO', fontsize = 18)
-# plt.legend(loc="upper center", bbox_to_anchor=(0.5, 1.15), fontsize = 12, ncol = 4)
+df_alpha = pd.concat([df_csvi, df_csvi_rsd,df_csvi_add, df_csvi_rsd_add,df_csvi_Add, df_csvi_rsd_Add], 
+                    join = "inner", ignore_index= True)
+df_alpha= df_alpha.loc[df_alpha['alpha'].isin((20, 50, 200, 2000, 10000, 100000))]
+df_alpha_outlier = df_alpha[df_alpha['elbo']< -3.5]
+print(df_alpha_outlier)
+# df_alpha_outlier = 
+f4, ax4 = plt.subplots()
+ax4 = sns.violinplot(x = 'alpha', y = 'elbo',data = df_alpha,
+                    hue = 'method', split = True ,palette= col_pal,
+                    scale = 'count', inner = 'stick',bw = 0.05)
+ax4 = sns.stripplot(x = 'alpha', y = 'elbo', data = df_alpha_outlier,
+                    hue = 'method', palette= col_pal,  
+                    linewidth= 1, jitter=0.01)
+plt.xlabel('alpha', fontsize = 18)
+plt.ylabel('ELBO', fontsize = 18)
+plt.legend(loc="upper center", bbox_to_anchor=(0.5, 1.15), fontsize = 12, ncol = 4)
 
-# plt.xticks(fontsize = 15)
-# plt.yticks(fontsize = 15)
-# f4.savefig('figures/alpha_elbo.png',bbox_inches='tight',dpi = 500)
+plt.xticks(fontsize = 15)
+plt.yticks(fontsize = 15)
+f4.savefig('figures/alpha_elbo.png',bbox_inches='tight',dpi = 500)
 
 
 

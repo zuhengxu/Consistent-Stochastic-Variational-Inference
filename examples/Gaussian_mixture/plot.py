@@ -88,7 +88,7 @@ print(df_syn_elbo)
 # make plot
 f1, ax1 = plt.subplots()
 ax1 = sns.violinplot(x = 'method', y = 'ELBO',data = df_syn_elbo[df_syn_elbo['ELBO'] > -1000],
-                    scale = 'count', inner = 'stick', bw = 0.1,
+                    scale = 'count', inner = 'stick', bw = 0.03,
                     order = ['CSVI(adam)', 'CLA', 'Laplace', 'SVI(adam)_Ind', 'SVI(adam)_Rand'])
 plt.xlabel('')
 plt.ylabel('ELBO',fontsize = 18)
@@ -153,7 +153,7 @@ print(df_real_elbo)
 # make plot
 f2, ax2 = plt.subplots()
 ax2 = sns.violinplot(x = 'method', y = 'ELBO', data = df_real_elbo,
-                    scale = 'count', inner = 'stick', bw = 0.1,
+                    scale = 'count', inner = 'stick', bw = 0.03,
                     order = ['CSVI(adam)_Ind', 'CLA', 'Laplace','SVI(adam)_Ind', 'SVI(adam)_Rand'])
 plt.xlabel('')
 plt.ylabel('ELBO',fontsize = 18)
