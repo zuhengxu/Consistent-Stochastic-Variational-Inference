@@ -29,7 +29,7 @@ df_syn = pd.concat([df0, df1])
 
 f, ax = plt.subplots()
 ax = sns.violinplot(x = 'Regularization', y = 'ELBO',data = df_syn,
-                    scale = 'count', inner = 'stick',bw = 0.08)
+                    scale = 'count', inner = 'stick', bw = 0.03, linewidth=0.4, gridsize=1000 )
 plt.xlabel('Regularization', fontsize = 18)
 plt.ylabel('ELBO', fontsize = 18)
 plt.title('Regularized SVI ', fontsize = 18)
@@ -51,7 +51,7 @@ df_syn_opt = pd.concat([df2, df3])
 
 f1, ax1 = plt.subplots()
 ax1 = sns.violinplot(x = 'Regularization', y = 'ELBO',data = df_syn_opt,
-                    scale = 'count', inner = 'stick',bw = 0.08)
+                    scale = 'count', inner = 'stick', bw = 0.03, linewidth=0.3, gridsize=1000 )
 plt.xlabel('Regularization', fontsize = 18)
 plt.ylabel('ELBO', fontsize = 18)
 plt.title('Regularized SVI + SMAP', fontsize = 18)

@@ -91,7 +91,7 @@ f1.savefig('figures/mixture.png',bbox_inches='tight',dpi = 500)
 f2, ax2 = plt.subplots()
 # print(df_results)
 ax2 = sns.violinplot(x = 'method', y = 'elbo',data = df_results,
-                    scale = 'count', inner = 'stick', palette= col_pal, bw = 0.02,
+                    scale = 'count', inner = 'stick', palette= col_pal, bw = 0.01, gridsize = 1000,linewidth= 0.2,
                     order = ['CSVI', 'CSVI_RSD', 'CLA', 'Laplace','SVI', 'SVI_Ind', 'SVI_SMAP', 'SVI_OPT'])
 plt.xlabel('')
 plt.ylabel('ELBO',fontsize = 18)
@@ -159,10 +159,10 @@ print(df_alpha_outlier)
 f4, ax4 = plt.subplots()
 ax4 = sns.violinplot(x = 'alpha', y = 'elbo',data = df_alpha,
                     hue = 'method', split = True ,palette= col_pal,
-                    scale = 'count', inner = 'stick',bw = 0.05)
+                    scale = 'count', inner = 'stick',bw = 0.01, gridsize =1000, linewidth = 0.2)
 ax4 = sns.stripplot(x = 'alpha', y = 'elbo', data = df_alpha_outlier,
                     hue = 'method', palette= col_pal,  
-                    linewidth= 1, jitter=0.01)
+                    linewidth= 1, jitter=0.05, dodge=True, alpha = 0.7)
 plt.xlabel('alpha', fontsize = 18)
 plt.ylabel('ELBO', fontsize = 18)
 plt.legend(loc="upper center", bbox_to_anchor=(0.5, 1.15), fontsize = 12, ncol = 4)

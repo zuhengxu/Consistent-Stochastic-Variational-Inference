@@ -74,22 +74,22 @@ for file in glob.glob(results_dir + "SYN_CSL*.csv"):
         df_CSL = pd.read_csv(file)
         CSL_elbo.append(np.array(df_CSL['0']))
 
-SYN_ELBO = {'CSVI(adam)' : CSVI_elbo[0],
-        'SVI(adam)_Ind': SVI_elbo[0],
-        'SVI(adam)_Rand': SVI_elbo[1],
+SYN_ELBO = {'CSVI' : CSVI_elbo[0],
+        'SVI_Ind': SVI_elbo[0],
+        'SVI': SVI_elbo[1],
         'CLA': CSL_elbo[0], 
         'Laplace': CSL_elbo[1]
 }
 syn_elbo = pd.DataFrame(SYN_ELBO)
-df_syn_elbo = syn_elbo.melt(value_vars=['CSVI(adam)','CLA', 'Laplace' ,'SVI(adam)_Ind', 'SVI(adam)_Rand'],
+df_syn_elbo = syn_elbo.melt(value_vars=['CSVI','CLA', 'Laplace','SVI_Ind', 'SVI'],
                         var_name='method', value_name= 'ELBO', ignore_index = True)
 print(df_syn_elbo)
 
 # make plot
 f1, ax1 = plt.subplots()
 ax1 = sns.violinplot(x = 'method', y = 'ELBO',data = df_syn_elbo[df_syn_elbo['ELBO'] > -1000],
-                    scale = 'count', inner = 'stick', bw = 0.03,
-                    order = ['CSVI(adam)', 'CLA', 'Laplace', 'SVI(adam)_Ind', 'SVI(adam)_Rand'])
+                    scale = 'count', inner = 'stick', bw = 0.02, linewidth=0.3, gridsize=1000,
+                    order = ['CSVI','CLA', 'Laplace','SVI_Ind', 'SVI'])
 plt.xlabel('')
 plt.ylabel('ELBO',fontsize = 18)
 plt.xticks(fontsize = 13)
@@ -137,24 +137,24 @@ for file in glob.glob(results_dir + "REAL_CSL*.csv"):
         df_CSL = pd.read_csv(file)
         CSL_elbo.append(np.array(df_CSL['0']))
 
-REAL_ELBO = {'CSVI(adam)_Rand' : CSVI_elbo[0],
-        'CSVI(adam)_Ind' : CSVI_elbo[1],
-        'SVI(adam)_Rand': SVI_elbo[0],
-        'SVI(adam)_Ind': SVI_elbo[1], 
+REAL_ELBO = {'CSVI_RSD' : CSVI_elbo[0],
+        'CSVI' : CSVI_elbo[1],
+        'SVI': SVI_elbo[0],
+        'SVI_Ind': SVI_elbo[1], 
         'CLA': CSL_elbo[1], 
         'Laplace': CSL_elbo[0]
 }
 
 real_elbo = pd.DataFrame(REAL_ELBO)
-df_real_elbo = real_elbo.melt(value_vars=['CSVI(adam)_Ind' , 'CLA',  'Laplace', 'SVI(adam)_Rand', 'SVI(adam)_Ind'],
+df_real_elbo = real_elbo.melt(value_vars=['CSVI', 'CSVI_RSD','CLA',  'Laplace', 'SVI', 'SVI_Ind'],
                         var_name='method', value_name= 'ELBO', ignore_index = True)
 print(df_real_elbo)
 
 # make plot
 f2, ax2 = plt.subplots()
 ax2 = sns.violinplot(x = 'method', y = 'ELBO', data = df_real_elbo,
-                    scale = 'count', inner = 'stick', bw = 0.03,
-                    order = ['CSVI(adam)_Ind', 'CLA', 'Laplace','SVI(adam)_Ind', 'SVI(adam)_Rand'])
+                    scale = 'count', inner = 'stick',bw = 0.02, linewidth=0.3, gridsize=1000,
+                    order = ['CSVI', 'CLA', 'Laplace','SVI_Ind', 'SVI'])
 plt.xlabel('')
 plt.ylabel('ELBO',fontsize = 18)
 plt.xticks(fontsize = 13)

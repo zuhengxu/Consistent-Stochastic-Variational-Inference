@@ -71,7 +71,7 @@ df_real_kl.replace('CSL', 'CLA', inplace= True)
 f2, ax2 = plt.subplots()
 # sns.set_theme(style="whitegrid")
 ax2 = sns.violinplot(x = 'method', y = 'fwd_KL',data = df_real_kl, 
-                    scale = 'count', inner = 'stick', bw = 0.1,
+                    scale = 'count', inner = 'stick', bw = 0.1, linewidth=0.3, gridsize=1000,
                     order = ['CSVI(adam)', 'CLA'])
                     # order = ['CSVI(adam)', 'CSVI(adam)_Rand', 'Laplace' ,'SVI(adam)_Ind', 'SVI(adam)_Rand'])
 plt.xlabel('')
