@@ -2,7 +2,7 @@
 
 This repository provides source code for the experiments in 
 
-Z. Xu and T. Campbell, [The computatioal asymptotics of Gaussian variational inference](https://arxiv.org/abs/2104.05886). 
+Z. Xu and T. Campbell, [The computatioal asymptotics of Gaussian variational inference](https://link.springer.com/article/10.1007/s11222-022-10125-y). 
 
 Examples run and generate output using Python3.
 - `VI/` provides functions for inferences (CSVI/SVI and smoothed MAP) 
